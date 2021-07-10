@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/smf8/gokkan/internal/app/gokkan/cmd"
 	"os"
+
+	"github.com/smf8/gokkan/internal/app/gokkan/cmd"
 )
 
 const exitCodeErr = 1

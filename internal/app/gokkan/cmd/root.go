@@ -1,11 +1,12 @@
 package cmd
 
 import (
+	"os"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/smf8/gokkan/internal/app/gokkan/cmd/server"
 	"github.com/smf8/gokkan/internal/app/gokkan/config"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 // NewRootCommand creates a new gokkan root command.

@@ -3,6 +3,9 @@ linters:
 
 issues:
   exclude-rules:
+    - path: \.go
+      linters:
+        - stylecheck
     - path: _test\.go
       linters:
         - lll
