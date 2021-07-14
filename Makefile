@@ -41,3 +41,10 @@ lint: check-linter format
 
 test:
 	go test -v -race -p 1 ./...
+
+############################################################
+# Install git hook
+############################################################
+
+install-hook:
+	git config --local core.hooksPath ./githooks
