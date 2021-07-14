@@ -48,3 +48,15 @@ test:
 
 install-hook:
 	git config --local core.hooksPath ./githooks
+
+
+############################################################
+# docker-compose
+############################################################
+
+up:
+	docker-compose up -d
+down:
+	docker-compose down
+ps: up
+	docker-compose ps
