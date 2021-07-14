@@ -1,5 +1,6 @@
 package model
 
+// Item represents an item in our website, it has a `belong-to` relation with model.Category
 type Item struct {
 	ID         int      `json:"id"`
 	CategoryID int      `json:"category_id"`

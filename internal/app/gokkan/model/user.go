@@ -1,5 +1,6 @@
 package model
 
+// User represents a normal user in database
 type User struct {
 	ID             int     `json:"id"`
 	Username       string  `json:"username"`

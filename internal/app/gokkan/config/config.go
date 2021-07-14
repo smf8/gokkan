@@ -1,6 +1,8 @@
 package config
 
 import (
+	"time"
+
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/yaml"
 	"github.com/knadh/koanf/providers/file"
@@ -11,13 +13,24 @@ import (
 type (
 	//Config represents a gokkan config instance.
 	Config struct {
-		Logger Logger `koanf:"logger"`
+		Logger   Logger   `koanf:"logger"`
+		Database Database `koanf:"database"`
 	}
 
 	//Logger represents logger(logrus) config information.
 	Logger struct {
 		Level   logrus.Level `koanf:"level"`
 		Enabled bool         `koanf:"enabled"`
+	}
+
+	// Database is PostgreSQL configuration
+	Database struct {
+		Host     string        `koanf:"host"`
+		Port     string        `koanf:"port"`
+		Name     string        `koanf:"name"`
+		Username string        `koanf:"username"`
+		Password string        `koanf:"password"`
+		Timeout  time.Duration `koanf:"timeout"`
 	}
 )
 
