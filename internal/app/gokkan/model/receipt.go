@@ -1,6 +1,10 @@
 package model
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 const (
 	// ReceiptStatusProcessing is for an in-process order
@@ -20,10 +24,54 @@ type Receipt struct {
 	ItemID         int           `json:"-"`
 	Item           Item          `json:"item"`
 	Quantity       int           `json:"quantity"`
+	UserID         int           `json:"user_id"`
 	BuyerName      string        `json:"buyer_name"`
 	BillingAddress string        `json:"billing_address"`
 	Price          float64       `json:"price"`
 	Date           time.Time     `json:"date"`
 	TrackingCode   string        `json:"tracking_code"`
 	Status         ReceiptStatus `json:"status"`
+}
+
+// ReceiptRepo defines allowed operations on receipts
+type ReceiptRepo interface {
+	Save(receipt *Receipt) error
+	UpdateStatus(receiptID int, status ReceiptStatus) error
+	FindForUser(userID int) ([]Receipt, error)
+}
+
+var _ ReceiptRepo = SQLReceiptRepo{}
+
+// SQLReceiptRepo is the SQL implementation of ReceiptRepo
+type SQLReceiptRepo struct {
+	DB *gorm.DB
+}
+
+// Save saves given receipt in database
+func (r SQLReceiptRepo) Save(receipt *Receipt) error {
+	return r.DB.Save(receipt).Error
+}
+
+// UpdateStatus changes the status of a specific receipt
+func (r SQLReceiptRepo) UpdateStatus(receiptID int, status ReceiptStatus) error {
+	receipt := Receipt{ID: receiptID}
+	if err := r.DB.Find(&receipt).Error; err != nil {
+		return err
+	}
+
+	receipt.Status = status
+
+	return r.DB.Save(&receipt).Error
+}
+
+// FindForUser returns receipts for given user.
+func (r SQLReceiptRepo) FindForUser(userID int) ([]Receipt, error) {
+	var result []Receipt
+
+	err := r.DB.Where("user_id = ?", userID).Find(&result).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
