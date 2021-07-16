@@ -14,8 +14,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          GOKKAN_POSTGRES_HOST: postgres
-          GOKKAN_POSTGRES_PORT: 5432
+          GOKKAN_DATABASE_HOST: postgres
           POSTGRES_DB: gokkan
           POSTGRES_PASSWORD: 1
           POSTGRES_USER: gokkan
