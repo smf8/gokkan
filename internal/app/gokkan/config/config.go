@@ -1,7 +1,10 @@
 package config
 
 import (
+	"strings"
 	"time"
+
+	"github.com/knadh/koanf/providers/env"
 
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/yaml"
@@ -46,6 +49,13 @@ func New() Config {
 
 	if err := k.Load(file.Provider("config.yml"), yaml.Parser()); err != nil {
 		logrus.Errorf("error loading file: %s", err)
+	}
+
+	if err := k.Load(env.Provider(Namespace, ".", func(s string) string {
+		parsedEnv := strings.Replace(strings.ToLower(strings.TrimPrefix(s, Namespace)), "__", "-", -1)
+		return strings.Replace(parsedEnv, "_", ".", -1)
+	}), nil); err != nil {
+		logrus.Errorf("error loading environment variables: %s", err)
 	}
 
 	if err := k.Unmarshal("", &instance); err != nil {
