@@ -14,7 +14,6 @@ jobs:
       postgres:
         image: postgres
         env:
-          GOKKAN_DATABASE_HOST: postgres
           POSTGRES_DB: gokkan
           POSTGRES_PASSWORD: 1
           POSTGRES_USER: gokkan
@@ -37,6 +36,8 @@ jobs:
         run: make lint
 
       - name: run tests
+        env:
+          GOKKAN_DATABASE_HOST: postgres
         run: make test
 
       - name: run tests
