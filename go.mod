@@ -3,6 +3,7 @@ module github.com/smf8/gokkan
 go 1.16
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/knadh/koanf v1.1.1
 	github.com/labstack/echo/v4 v4.4.0
 	github.com/sirupsen/logrus v1.8.1
