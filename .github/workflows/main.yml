@@ -17,6 +17,8 @@ jobs:
           POSTGRES_DB: gokkan
           POSTGRES_PASSWORD: 1
           POSTGRES_USER: gokkan
+        ports:
+          - 5432:5432
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -37,7 +39,7 @@ jobs:
 
       - name: run tests
         env:
-          GOKKAN_DATABASE_HOST: postgres
+          GOKKAN_DATABASE_HOST: localhost
         run: make test
 
       - name: run build
