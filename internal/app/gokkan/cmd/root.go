@@ -20,7 +20,7 @@ func NewRootCommand() *cobra.Command {
 	log.SetOutput(os.Stdout)
 	log.SetLevel(cfg.Logger.Level)
 
-	server.Register(root)
+	server.Register(root, cfg)
 
 	return root
 }
