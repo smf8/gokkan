@@ -4,10 +4,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/knadh/koanf/providers/env"
-
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/yaml"
+	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/providers/structs"
 	"github.com/sirupsen/logrus"
@@ -16,19 +15,27 @@ import (
 const _Prefix = "GOKKAN_"
 
 type (
-	//Config represents a gokkan config instance.
+	// Config represents a gokkan config instance.
 	Config struct {
 		Logger   Logger   `koanf:"logger"`
 		Database Database `koanf:"database"`
+		Server   Server   `koanf:"server"`
 	}
 
-	//Logger represents logger(logrus) config information.
+	// Server struct specifies echo server settings.
+	Server struct {
+		Timeout time.Duration `koanf:"timeout"`
+		Secret  string        `koanf:"secret"`
+		Port    int           `koanf:"port"`
+	}
+
+	// Logger represents logger(logrus) config information.
 	Logger struct {
 		Level   logrus.Level `koanf:"level"`
 		Enabled bool         `koanf:"enabled"`
 	}
 
-	// Database is PostgreSQL configuration
+	// Database is PostgreSQL configuration.
 	Database struct {
 		Host     string        `koanf:"host"`
 		Port     string        `koanf:"port"`
@@ -39,7 +46,7 @@ type (
 	}
 )
 
-//New creates a new config instance with this order : default -> config.yml.
+// New creates a new config instance with this order : default -> config.yml.
 func New() Config {
 	var instance Config
 
@@ -54,8 +61,9 @@ func New() Config {
 	}
 
 	if err := k.Load(env.Provider(_Prefix, ".", func(s string) string {
-		parsedEnv := strings.Replace(strings.ToLower(strings.TrimPrefix(s, _Prefix)), "__", "-", -1)
-		return strings.Replace(parsedEnv, "_", ".", -1)
+		parsedEnv := strings.ReplaceAll(strings.ToLower(strings.TrimPrefix(s, _Prefix)), "__", "-")
+
+		return strings.ReplaceAll(parsedEnv, "_", ".")
 	}), nil); err != nil {
 		logrus.Errorf("error loading environment variables: %s", err)
 	}

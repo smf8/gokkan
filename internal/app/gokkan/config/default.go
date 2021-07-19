@@ -2,10 +2,10 @@ package config
 
 import "time"
 
-//Namespace is the name for application instance
+// Namespace is the name for application instance.
 const Namespace = "Gokkan"
 
-//nolint:lll,gochecknoglobals,gomnd
+//nolint:lll,gomnd,gochecknoglobals
 var def = Config{
 	Logger: Logger{
 		Level:   5,
@@ -18,5 +18,10 @@ var def = Config{
 		Username: "gokkan",
 		Password: "1",
 		Timeout:  5 * time.Second,
+	},
+	Server: Server{
+		Timeout: 5 * time.Second,
+		Secret:  "super_top_classified_secret",
+		Port:    8080,
 	},
 }
