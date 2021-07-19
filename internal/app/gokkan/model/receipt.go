@@ -7,18 +7,18 @@ import (
 )
 
 const (
-	// ReceiptStatusProcessing is for an in-process order
+	// ReceiptStatusProcessing is for an in-process order.
 	ReceiptStatusProcessing = iota
-	// ReceiptStatusDone is for a finished order
+	// ReceiptStatusDone is for a finished order.
 	ReceiptStatusDone
-	// ReceiptStatusCanceled is for a canceled order
+	// ReceiptStatusCanceled is for a canceled order.
 	ReceiptStatusCanceled
 )
 
-// ReceiptStatus is one of ReceiptStatusProcessing, ReceiptStatusDone, ReceiptStatusCanceled
+// ReceiptStatus is one of ReceiptStatusProcessing, ReceiptStatusDone, ReceiptStatusCanceled.
 type ReceiptStatus int
 
-// Receipt is a receipt for an item. it has a `belong-to` relation with model.Item
+// Receipt is a receipt for an item. it has a `belong-to` relation with model.Item.
 type Receipt struct {
 	ID             int           `json:"id"`
 	ItemID         int           `json:"-"`
@@ -33,7 +33,7 @@ type Receipt struct {
 	Status         ReceiptStatus `json:"status"`
 }
 
-// ReceiptRepo defines allowed operations on receipts
+// ReceiptRepo defines allowed operations on receipts.
 type ReceiptRepo interface {
 	Save(receipt *Receipt) error
 	UpdateStatus(receiptID int, status ReceiptStatus) error
@@ -42,17 +42,17 @@ type ReceiptRepo interface {
 
 var _ ReceiptRepo = SQLReceiptRepo{}
 
-// SQLReceiptRepo is the SQL implementation of ReceiptRepo
+// SQLReceiptRepo is the SQL implementation of ReceiptRepo.
 type SQLReceiptRepo struct {
 	DB *gorm.DB
 }
 
-// Save saves given receipt in database
+// Save saves given receipt in database.
 func (r SQLReceiptRepo) Save(receipt *Receipt) error {
 	return r.DB.Save(receipt).Error
 }
 
-// UpdateStatus changes the status of a specific receipt
+// UpdateStatus changes the status of a specific receipt.
 func (r SQLReceiptRepo) UpdateStatus(receiptID int, status ReceiptStatus) error {
 	receipt := Receipt{ID: receiptID}
 	if err := r.DB.Find(&receipt).Error; err != nil {

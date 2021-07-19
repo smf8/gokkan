@@ -18,9 +18,9 @@ func DSN(cfg config.Database) string {
 func New(cfg config.Database) (*gorm.DB, error) {
 	// it's better to try and connect to database with retry.
 	// https://github.com/avast/retry-go might be a good option.
-	db, err := gorm.Open(postgres.Open(DSN(cfg)), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(DSN(cfg)))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 
 	return db, nil

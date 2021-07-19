@@ -9,6 +9,8 @@ import (
 )
 
 func TestConnectDatabase(t *testing.T) {
+	t.Parallel()
+
 	cfg := config.New()
 	a := assert.New(t)
 	db, err := database.New(cfg.Database)

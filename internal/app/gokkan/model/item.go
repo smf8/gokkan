@@ -10,7 +10,7 @@ import (
 // ErrItemNotFound the purpose of this variable is pretty obvious.
 var ErrItemNotFound = errors.New("item not found")
 
-// Item represents an item in our website, it has a `belong-to` relation with model.Category
+// Item represents an item in our website, it has a `belong-to` relation with model.Category.
 type Item struct {
 	ID         int       `json:"id"`
 	CategoryID int       `json:"category_id"`
@@ -51,7 +51,7 @@ type SQLItemRepo struct {
 type ItemOption func(option *findOption)
 
 // we use something like functional options
-//for providing dynamic selection cases
+// for providing dynamic selection cases
 
 // WithPriceRange sets price minimum and maximum in select statement.
 func WithPriceRange(minPrice, maxPrice float64) ItemOption {
@@ -68,21 +68,21 @@ func WithLimit(limit int) ItemOption {
 	}
 }
 
-// WithCategory specifies the category to select for
+// WithCategory specifies the category to select for.
 func WithCategory(categoryID int) ItemOption {
 	return func(option *findOption) {
 		option.categoryID = categoryID
 	}
 }
 
-// WithDescendingOrder sets order of results to descending order
+// WithDescendingOrder sets order of results to descending order.
 func WithDescendingOrder() ItemOption {
 	return func(option *findOption) {
 		option.descendingOrder = true
 	}
 }
 
-// WithPriceOrder sets order by price
+// WithPriceOrder sets order by price.
 func WithPriceOrder() ItemOption {
 	return func(option *findOption) {
 		option.orderPrice = true
@@ -91,7 +91,7 @@ func WithPriceOrder() ItemOption {
 	}
 }
 
-// WithDateOrder sets order by date
+// WithDateOrder sets order by date.
 func WithDateOrder() ItemOption {
 	return func(option *findOption) {
 		option.orderPrice = false
@@ -99,6 +99,7 @@ func WithDateOrder() ItemOption {
 	}
 }
 
+//nolint:nestif
 func (o findOption) toSQL(tx *gorm.DB) *gorm.DB {
 	if o.maxPrice != 0 {
 		tx = tx.Where("price < ? and price > ?", o.maxPrice, o.minPrice)

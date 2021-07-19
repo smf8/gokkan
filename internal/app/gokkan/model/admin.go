@@ -21,7 +21,7 @@ type AdminRepo interface {
 	Find(username string) (*Admin, error)
 }
 
-// make sure SQLAdminRepo implements AdminRepo at compile time
+// make sure SQLAdminRepo implements AdminRepo at compile time.
 var _ AdminRepo = SQLAdminRepo{}
 
 // SQLAdminRepo is SQL implementation of AdminRepo.
