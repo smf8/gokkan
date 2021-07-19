@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -9,14 +10,25 @@ import (
 	"github.com/smf8/gokkan/internal/app/gokkan/config"
 )
 
-// Issuer is jwt issuer for token generation
+// Issuer is jwt issuer for token generation.
 const Issuer = "gokkan.io"
 
-var defaultExpiration = 24 * time.Hour
+const defaultExpiration = 24 * time.Hour
+
+var (
+	// ErrInvalidIssuer occurs with invalid ISS field.
+	ErrInvalidIssuer = errors.New("invalid issuer")
+	// ErrTokenExpired occurs when token is expired.
+	ErrTokenExpired = errors.New("token expired")
+	// ErrInvalidIssuedAt occurs when token issue time is in future.
+	ErrInvalidIssuedAt = errors.New("token issue date is not valid")
+	// ErrInvalidClaimsType occurs when claims types are other than GokkanClaims.
+	ErrInvalidClaimsType = errors.New("invalid claims type")
+)
 
 // GokkanClaims store a combination of registered and public
 // jwt claims. check https://www.iana.org/assignments/jwt/jwt.xhtml
-// for description about claims
+// for description about claims.
 type GokkanClaims struct {
 	// Issuer
 	Iss string `json:"iss,omitempty"`
@@ -36,27 +48,27 @@ type GokkanClaims struct {
 	Privieged bool `json:"privieged,omitempty"`
 }
 
-// Valid checks if a GokkanClaims is valid jwt token or not
+// Valid checks if a GokkanClaims is valid jwt token or not.
 func (g GokkanClaims) Valid() error {
 	if g.Iss != Issuer {
-		return fmt.Errorf("invalid issuer")
+		return ErrInvalidIssuer
 	}
 
 	now := time.Now().Unix()
 
 	if g.Exp < now {
-		return fmt.Errorf("token expired")
+		return ErrTokenExpired
 	}
 
 	if now < g.Iat {
-		return fmt.Errorf("token is not ready to use")
+		return ErrInvalidIssuedAt
 	}
 
 	return nil
 }
 
 // MiddlewareConfig returns echo's default jwt middleware config
-// with custom signing key and claims struct
+// with custom signing key and claims struct.
 func MiddlewareConfig(cfg config.Server) middleware.JWTConfig {
 	config := middleware.JWTConfig{
 		SigningKey: cfg.Secret,
@@ -71,7 +83,7 @@ func ExtractClaims(token jwt.Token) (*GokkanClaims, error) {
 	claims, ok := token.Claims.(*GokkanClaims)
 
 	if !ok {
-		return nil, fmt.Errorf("invalid token claims type: %t", token.Claims)
+		return nil, fmt.Errorf("type conversion failed: %t, %w", token.Claims, ErrInvalidClaimsType)
 	}
 
 	return claims, nil
@@ -90,5 +102,10 @@ func Generate(secret, username string, isAdmin bool) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString([]byte(secret))
+	tokenString, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return "", fmt.Errorf("failed to generate token: %w", err)
+	}
+
+	return tokenString, nil
 }

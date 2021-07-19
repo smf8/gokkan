@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -39,7 +38,7 @@ func main(cfg config.Config) {
 	defer c()
 
 	if err := echo.Shutdown(ctx); err != nil {
-		log.Fatalf("failed to shutdown echo gracefully: %s", err.Error())
+		logrus.Errorf("failed to shutdown echo gracefully: %s", err.Error())
 	}
 }
 

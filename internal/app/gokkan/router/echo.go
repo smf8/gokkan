@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-// Echo creates a new echo router with given config
+// Echo creates a new echo router with given config.
 func Echo() *echo.Echo {
 	e := echo.New()
 
