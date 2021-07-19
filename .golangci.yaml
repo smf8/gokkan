@@ -6,6 +6,10 @@ issues:
     - path: \.go
       linters:
         - stylecheck
+        - exhaustivestruct
+        - typecheck
+        - tagliatelle
+        - nolintlint
     - path: _test\.go
       linters:
         - lll
