@@ -4,8 +4,9 @@ export APP=gokkan
 
 export ROOT=$(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
+export POSTGRES_ADDRESS="localhost:5432"
 export LDFLAGS="-w -s"
-
+export POSTGRES_DSN="postgres://gokkan:1@$(POSTGRES_ADDRESS)/gokkan?sslmode=disable"
 all: format lint build
 
 ############################################################
@@ -60,3 +61,22 @@ down:
 	docker-compose down
 ps: up
 	docker-compose ps
+
+############################################################
+# SQL-Migration
+############################################################
+
+check-migrate:
+	which migrate || go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+
+migrate-create:
+	migrate create -ext sql -dir ./config/sql $(NAME)
+
+migrate-up:
+	migrate -verbose  -path ./config/sql -database $(POSTGRES_DSN) up
+
+migrate-down:
+	 migrate -path ./config/sql -database $(POSTGRES_DSN) down
+
+migrate-reset:
+	 migrate -path ./config/sql -database $(POSTGRES_DSN) drop
