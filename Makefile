@@ -25,10 +25,15 @@ install:
 
 check-formatter:
 	which goimports || GO111MODULE=off go get -u golang.org/x/tools/cmd/goimports
+	which gci || GO111MODULE=off go get github.com/daixiang0/gci
+	which gofumpt || GO111MODULE=off go get mvdan.cc/gofumpt
 
 format: check-formatter
 	find $(ROOT) -type f -name "*.go" -not -path "$(ROOT)/vendor/*" | xargs -n 1 -I R goimports -w R
 	find $(ROOT) -type f -name "*.go" -not -path "$(ROOT)/vendor/*" | xargs -n 1 -I R gofmt -s -w R
+	find $(ROOT) -type f -name "*.go" -not -path "$(ROOT)/vendor/*" | xargs -n 1 -I R gci -w R
+	find $(ROOT) -type f -name "*.go" -not -path "$(ROOT)/vendor/*" | xargs -n 1 -I R gofumpt -s -w R
+
 
 check-linter:
 	which golangci-lint || GO111MODULE=off curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sudo sh -s -- -b $(go env GOPATH)/bin v1.40.1

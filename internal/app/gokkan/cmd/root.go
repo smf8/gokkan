@@ -11,7 +11,7 @@ import (
 
 // NewRootCommand creates a new gokkan root command.
 func NewRootCommand() *cobra.Command {
-	var root = &cobra.Command{
+	root := &cobra.Command{
 		Use: "gokkan",
 	}
 
