@@ -33,7 +33,7 @@ type SQLAdminRepo struct {
 func (a SQLAdminRepo) Find(username string) (*Admin, error) {
 	var admin *Admin
 	if err := a.DB.Where("username=?", username).
-		First(admin).Error; err != nil {
+		First(&admin).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrUserNotFound
 		}

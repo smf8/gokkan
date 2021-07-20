@@ -10,6 +10,9 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/smf8/gokkan/internal/app/gokkan/config"
+	"github.com/smf8/gokkan/internal/app/gokkan/database"
+	"github.com/smf8/gokkan/internal/app/gokkan/handler"
+	"github.com/smf8/gokkan/internal/app/gokkan/model"
 	"github.com/smf8/gokkan/internal/app/gokkan/router"
 	"github.com/spf13/cobra"
 )
@@ -18,6 +21,24 @@ const shutdownTimeout = 5 * time.Second
 
 func main(cfg config.Config) {
 	echo := router.Echo()
+
+	db, err := database.New(cfg.Database)
+	if err != nil {
+		logrus.Fatalf("failed to connect to database: %s", err.Error())
+	}
+
+	userRepo := model.SQLUserRepo{
+		DB: db,
+	}
+
+	adminRepo := model.SQLAdminRepo{
+		DB: db,
+	}
+
+	userHandler := handler.NewUserHandler(userRepo, adminRepo, cfg.Server.Secret)
+
+	echo.POST("/login", userHandler.Login)
+	echo.POST("/signup", userHandler.Signup)
 
 	go func() {
 		err := echo.Start(fmt.Sprintf(":%d", cfg.Server.Port))

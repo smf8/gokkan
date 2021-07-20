@@ -16,7 +16,7 @@ type User struct {
 // UserRepo defins allowed operations on User.
 type UserRepo interface {
 	Save(user *User) error
-	Find(username string) (User, error)
+	Find(username string) (*User, error)
 }
 
 // SQLUserRepo is SQL implementation of UserRepo.

@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
@@ -39,9 +40,13 @@ func (u UserHandler) Signup(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bind request failed: %s", err))
 	}
 
+	if err := c.Validate(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bad login request: %s", err.Error()))
+	}
+
 	user := &model.User{
-		Username:       req.Username,
-		Password:       auth.Hash(req.Passwrord),
+		Username:       strings.ToLower(req.Username),
+		Password:       auth.Hash(req.Password),
 		FullName:       req.FullName,
 		BillingAddress: req.BillingAddress,
 	}
@@ -50,7 +55,7 @@ func (u UserHandler) Signup(c echo.Context) error {
 	if err := u.UserRepo.Save(user); err != nil {
 		logrus.Errorf("failed to create user %+v : %s", *user, err)
 
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create user")
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create user, user exists")
 	}
 
 	jwtToken, err := auth.Generate(u.jwtSecret, user.Username, false)
@@ -81,9 +86,16 @@ func (u UserHandler) Login(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bind request failed: %s", err))
 	}
 
+	if err := c.Validate(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bad login request: %s", err.Error()))
+	}
+
 	if req.IsAdmin {
 		return u.loginAdmin(c, req)
 	}
+
+	// convert username to lowercase
+	req.Username = strings.ToLower(req.Username)
 
 	return u.loginUser(c, req)
 }
@@ -91,7 +103,7 @@ func (u UserHandler) Login(c echo.Context) error {
 func (u UserHandler) loginUser(c echo.Context, req *request.Login) error {
 	user, err := u.UserRepo.Find(req.Username)
 	if err != nil {
-		logrus.Debugf("failed to login user %s: %s", req.Username, err.Error())
+		logrus.Errorf("failed to login user %s: %s", req.Username, err.Error())
 
 		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
