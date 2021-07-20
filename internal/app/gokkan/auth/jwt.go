@@ -3,17 +3,20 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/smf8/gokkan/internal/app/gokkan/config"
+	"github.com/smf8/gokkan/internal/app/gokkan/model"
 )
 
 // Issuer is jwt issuer for token generation.
 const Issuer = "gokkan.io"
 
-const defaultExpiration = 24 * time.Hour
+// DefaultExpiration specifies JWT token expiration period.
+const DefaultExpiration = 24 * time.Hour
 
 var (
 	// ErrInvalidIssuer occurs with invalid ISS field.
@@ -24,6 +27,18 @@ var (
 	ErrInvalidIssuedAt = errors.New("token issue date is not valid")
 	// ErrInvalidClaimsType occurs when claims types are other than GokkanClaims.
 	ErrInvalidClaimsType = errors.New("invalid claims type")
+	// ErrBlockedToken indicates that token with given JTI is blocked.
+	ErrBlockedToken = errors.New("jwt token is blocked")
+)
+
+//nolint:gochecknoglobals
+// probably not a good call to use a global variable here.
+// but since our repo is thread-safe and by using this design
+// we have JTI validation in GokkanClaims.Valid, I chose this
+// design.
+var (
+	blacklistRepo model.TokenBlacklistRepo
+	once          sync.Once
 )
 
 // GokkanClaims store a combination of registered and public
@@ -64,7 +79,19 @@ func (g GokkanClaims) Valid() error {
 		return ErrInvalidIssuedAt
 	}
 
+	if blacklistRepo.Check(g.JTI) {
+		return ErrBlockedToken
+	}
+
 	return nil
+}
+
+// SetTokenBlacklistRepo sets global token blacklist repo in auth package.
+// it should be called only once.
+func SetTokenBlacklistRepo(repo model.TokenBlacklistRepo) {
+	once.Do(func() {
+		blacklistRepo = repo
+	})
 }
 
 // MiddlewareConfig returns echo's default jwt middleware config
@@ -94,7 +121,7 @@ func Generate(secret, username string, isAdmin bool) (string, error) {
 	claims := &GokkanClaims{
 		Iss:       Issuer,
 		Sub:       username,
-		Exp:       time.Now().Add(defaultExpiration).Unix(),
+		Exp:       time.Now().Add(DefaultExpiration).Unix(),
 		Iat:       time.Now().Unix(),
 		JTI:       fmt.Sprintf("%d", time.Now().UnixNano()),
 		Privieged: isAdmin,
