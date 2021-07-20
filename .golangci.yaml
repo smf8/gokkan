@@ -10,6 +10,7 @@ issues:
         - typecheck
         - tagliatelle
         - nolintlint
+        - wrapcheck
     - path: _test\.go
       linters:
         - lll
