@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -18,14 +19,66 @@ type UserHandler struct {
 	jwtSecret string
 }
 
+// NewUserHandler creates a new user handler.
+func NewUserHandler(userRepo model.UserRepo,
+	adminRepo model.AdminRepo, jwtSecret string) UserHandler {
+	return UserHandler{
+		UserRepo:  userRepo,
+		AdminRepo: adminRepo,
+		jwtSecret: jwtSecret,
+	}
+}
+
+// Signup handles user signup.
+func (u UserHandler) Signup(c echo.Context) error {
+	req := &request.Signup{}
+
+	if err := c.Bind(req); err != nil {
+		logrus.Errorf("failed to bind signup request: %s", err.Error())
+
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bind request failed: %s", err))
+	}
+
+	user := &model.User{
+		Username:       req.Username,
+		Password:       auth.Hash(req.Passwrord),
+		FullName:       req.FullName,
+		BillingAddress: req.BillingAddress,
+	}
+
+	// it's better to handle duplicate user signup error differently
+	if err := u.UserRepo.Save(user); err != nil {
+		logrus.Errorf("failed to create user %+v : %s", *user, err)
+
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create user")
+	}
+
+	jwtToken, err := auth.Generate(u.jwtSecret, user.Username, false)
+	if err != nil {
+		logrus.Errorf("failed to create jwt token: %s", err.Error())
+
+		return echo.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	response := response.User{
+		ID:             user.ID,
+		Username:       user.Username,
+		FullName:       user.FullName,
+		BillingAddress: user.BillingAddress,
+		Token:          jwtToken,
+	}
+
+	return c.JSON(http.StatusCreated, response)
+}
+
 // Login handles user/admin login.
 func (u UserHandler) Login(c echo.Context) error {
 	req := &request.Login{}
 
 	if err := c.Bind(req); err != nil {
-		logrus.Errorf("failed to bind request: %s", err.Error())
+		logrus.Errorf("failed to bind login request: %s", err.Error())
 
-		return echo.NewHTTPError(http.StatusBadRequest, "bind request failed")
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bind request failed: %s", err))
 	}
 
 	if req.IsAdmin {
