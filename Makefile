@@ -74,14 +74,14 @@ ps: up
 check-migrate:
 	which migrate || go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
-migrate-create:
+migrate-create: check-migrate
 	migrate create -ext sql -dir ./config/sql $(NAME)
 
-migrate-up:
+migrate-up: check-migrate
 	migrate -verbose  -path ./config/sql -database $(POSTGRES_DSN) up
 
-migrate-down:
+migrate-down: check-migrate
 	 migrate -path ./config/sql -database $(POSTGRES_DSN) down
 
-migrate-reset:
+migrate-reset: check-migrate
 	 migrate -path ./config/sql -database $(POSTGRES_DSN) drop
