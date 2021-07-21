@@ -1,6 +1,9 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"fmt"
+	"gorm.io/gorm"
+)
 
 // Category specifies an item category.
 type Category struct {
@@ -25,7 +28,16 @@ type SQLCategoryRepo struct {
 
 // Delete removes a category with given ID.
 func (c SQLCategoryRepo) Delete(id int) error {
-	return c.DB.Where("id = ?", id).Delete(&Category{}).Error
+	query := c.DB.Where("id = ?", id).Delete(&Category{})
+	if query.Error != nil {
+		return query.Error
+	}
+
+	if query.RowsAffected == 0 {
+		return fmt.Errorf("sql category delete: %w", ErrRecordNotFound)
+	}
+
+	return nil
 }
 
 // Save saves given category. if it contains an ID it's updated.
