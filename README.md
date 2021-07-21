@@ -3,11 +3,17 @@ Gokkan is an online shop backend service written in Go.
 
 ## Setup
 ### Requirements
+
+```shell
+# or docker-compose up
+make up
+```
+
 Gokkan requires `postgresql` as database.
 You can use `docker-compose` to get an instance up and running.
 
-**Note** the default settings in `internal/app/gokkan/config/default.go`
-when connecting to the database.
+**Note the default settings in `internal/app/gokkan/config/default.go`
+when connecting to the database.**
 
 A `pgAdmin` instance is also inside docker-compsoe. you can use `localhost:8000` to check database with `pgAdmin`
 
@@ -38,4 +44,4 @@ make migrate-reset
 ## Usage
 Echo server will start listening on port `8080` by default.
 
-A (Postman Collection file)[gokkan_api.json] is provided to describe API behaviour
+A [Postman Collection file](gokkan_api.json) is provided to describe API behaviour
