@@ -13,7 +13,7 @@ import (
 	"github.com/smf8/gokkan/internal/app/gokkan/request"
 )
 
-// BuyHandler handles item buying and receipt operations
+// BuyHandler handles item buying and receipt operations.
 type BuyHandler struct {
 	ItemRepo    model.ItemRepo
 	ReceiptRepo model.ReceiptRepo
@@ -21,7 +21,7 @@ type BuyHandler struct {
 }
 
 // Buy handles buying an item and generating a receipt.
-//nolint:funlen
+//nolint:funlen,cyclop
 func (b BuyHandler) Buy(c echo.Context) error {
 	claims, err := auth.ExtractClaims(c)
 	if err != nil {
