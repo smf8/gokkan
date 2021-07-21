@@ -38,7 +38,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\",\n    \"is_admin\": true\n}",
+							"raw": "{\n    \"username\": \"admin@admin.admin\",\n    \"password\": \"the_powerful_admin\",\n    \"is_admin\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -78,7 +78,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"id\": 0,\n    \"username\": \"admin\",\n    \"is_admin\": true,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTYyNjkwMDY5MSwiaWF0IjoxNjI2ODE0MjkxLCJqdGkiOiIxNjI2ODE0MjkxMTQ3Njg3MDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.DIMksK6Tdxjw4ajxXcsW-OShFoqt39v0Q4RBGSI3SOA\"\n}"
+					"body": "{\n    \"id\": 0,\n    \"username\": \"admin@admin.admin\",\n    \"is_admin\": true,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbkBhZG1pbi5hZG1pbiIsImV4cCI6MTYyNjk1MzA5MywiaWF0IjoxNjI2ODY2NjkzLCJqdGkiOiIxNjI2ODY2NjkzMzgwNjAxMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.vxB9ff4WzmZhzXr6DDc2nwaLmpQ818BjLQOLENoAt00\"\n}"
 				},
 				{
 					"name": "admin fail",
@@ -87,7 +87,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"1\",\n    \"is_admin\": true\n}",
+							"raw": "{\n    \"username\": \"admin@admin.admin\",\n    \"password\": \"the_powerful_admin\",\n    \"is_admin\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -236,7 +236,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"secret\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
+					"raw": "{\n    \"username\": \"test_user3@gmail.com\",\n    \"password\": \"123456789\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
