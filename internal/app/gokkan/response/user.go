@@ -8,5 +8,5 @@ type User struct {
 	BillingAddress string  `json:"billing_address,omitempty"`
 	Balance        float64 `json:"balance,omitempty"`
 	IsAdmin        bool    `json:"is_admin"`
-	Token          string  `json:"token"`
+	Token          string  `json:"token,omitempty"`
 }

@@ -37,7 +37,7 @@ func NewUserHandler(userRepo model.UserRepo,
 func (u UserHandler) GetInfo(c echo.Context) error {
 	claims, err := auth.ExtractClaims(c)
 	if err != nil {
-		logrus.Errorf("charge balance: failed to extract claims: %s", err)
+		logrus.Errorf("get info: failed to extract claims: %s", err)
 
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
 	}
@@ -49,20 +49,12 @@ func (u UserHandler) GetInfo(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
 
-	jwtToken, err := auth.Generate(u.jwtSecret, user.Username, false)
-	if err != nil {
-		logrus.Errorf("user login: failed to create jwt token: %s", err.Error())
-
-		return echo.NewHTTPError(http.StatusInternalServerError)
-	}
-
 	response := response.User{
 		ID:             user.ID,
 		Username:       user.Username,
 		FullName:       user.FullName,
 		BillingAddress: user.BillingAddress,
 		Balance:        user.Balance,
-		Token:          jwtToken,
 	}
 
 	return c.JSON(http.StatusOK, response)
