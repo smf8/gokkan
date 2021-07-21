@@ -22,7 +22,7 @@ type ReceiptStatus int
 type Receipt struct {
 	ID             int           `json:"id"`
 	ItemID         int           `json:"-"`
-	Item           Item          `json:"item"`
+	Item           Item          `json:"item,omitempty"`
 	Quantity       int           `json:"quantity"`
 	UserID         int           `json:"user_id"`
 	BuyerName      string        `json:"buyer_name"`
@@ -68,7 +68,7 @@ func (r SQLReceiptRepo) UpdateStatus(receiptID int, status ReceiptStatus) error 
 func (r SQLReceiptRepo) FindForUser(userID int) ([]Receipt, error) {
 	var result []Receipt
 
-	err := r.DB.Where("user_id = ?", userID).Find(&result).Error
+	err := r.DB.Joins("Item").Where("user_id = ?", userID).Find(&result).Error
 	if err != nil {
 		return nil, err
 	}
