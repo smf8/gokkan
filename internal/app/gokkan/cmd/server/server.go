@@ -39,6 +39,9 @@ func main(cfg config.Config) {
 	itemRepo := model.SQLItemRepo{
 		DB: db,
 	}
+	receiptsRepo := model.SQLReceiptRepo{
+		DB: db,
+	}
 
 	blacklistRepo := model.NewCacheTokenBlacklistRepo(auth.DefaultExpiration)
 
@@ -49,6 +52,11 @@ func main(cfg config.Config) {
 	userHandler := handler.NewUserHandler(userRepo, blacklistRepo, cfg.Server.Secret)
 	categoryHandler := handler.CategoryHandler{CategoryRepo: categoryRepo}
 	itemHandler := handler.ItemHandler{ItemRepo: itemRepo}
+	buyHandler := handler.BuyHandler{
+		ItemRepo:    itemRepo,
+		ReceiptRepo: receiptsRepo,
+		UserRepo:    userRepo,
+	}
 
 	// unrestricted endpoints
 	echo.POST("/login", userHandler.Login)
@@ -68,11 +76,14 @@ func main(cfg config.Config) {
 	userArea.GET("/me", userHandler.GetInfo)
 	userArea.POST("/logout", userHandler.Logout)
 	userArea.PUT("/update", userHandler.Update)
+	userArea.POST("/buy", buyHandler.Buy)
+	userArea.GET("/receipts", buyHandler.GetReceipts)
 
 	// admin area routing
 	adminArea.POST("/categories/create", categoryHandler.Create)
 	adminArea.DELETE("/categories/delete/:id", categoryHandler.Delete)
 	adminArea.POST("/items/create", itemHandler.Create)
+	adminArea.PUT("/receipts/update", buyHandler.UpdateReceipt)
 
 	go func() {
 		err := echo.Start(fmt.Sprintf(":%d", cfg.Server.Port))

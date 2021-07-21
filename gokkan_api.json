@@ -379,7 +379,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXIxIiwiZXhwIjoxNjI2OTM0NzQ4LCJpYXQiOjE2MjY4NDgzNDgsImp0aSI6IjE2MjY4NDgzNDgwMTc2NzEwMDAifQ.YQgRZUEUAkdlA_6mzWbkXaZe50mvtkVN2C9--xdmBbI",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXJAZ21haWwuY29tIiwiZXhwIjoxNjI2OTczMDY0LCJpYXQiOjE2MjY4ODY2NjQsImp0aSI6IjE2MjY4ODY2NjQ1ODQyNjMwMDAifQ.-TevVEEZh2kFIf-txXJpYMHgMtdIaaK3UxHKredYTWY",
 							"type": "string"
 						}
 					]
@@ -388,7 +388,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"amount\": 1.5\n}",
+					"raw": "{\n    \"amount\": 100000000\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -412,6 +412,16 @@
 		{
 			"name": "Get User info",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXJAZ21haWwuY29tIiwiZXhwIjoxNjI2OTczMDY0LCJpYXQiOjE2MjY4ODY2NjQsImp0aSI6IjE2MjY4ODY2NjQ1ODQyNjMwMDAifQ.-TevVEEZh2kFIf-txXJpYMHgMtdIaaK3UxHKredYTWY",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -593,7 +603,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbkBhZG1pbi5hZG1pbiIsImV4cCI6MTYyNjk1MzA5MywiaWF0IjoxNjI2ODY2NjkzLCJqdGkiOiIxNjI2ODY2NjkzMzgwNjAxMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.vxB9ff4WzmZhzXr6DDc2nwaLmpQ818BjLQOLENoAt00",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXJAZ21haWwuY29tIiwiZXhwIjoxNjI2OTczMDY0LCJpYXQiOjE2MjY4ODY2NjQsImp0aSI6IjE2MjY4ODY2NjQ1ODQyNjMwMDAifQ.-TevVEEZh2kFIf-txXJpYMHgMtdIaaK3UxHKredYTWY",
 							"type": "string"
 						}
 					]
@@ -602,7 +612,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"شیر خوردنی\",\n    \"category_id\": 1,\n    \"price\": 1600\n}",
+					"raw": "{\n    \"name\": \"گوز\",\n    \"category_id\": 1,\n    \"price\": 1600,\n    \"remaining\": 999\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -657,6 +667,112 @@
 					"path": [
 						"users",
 						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buy Item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXJAZ21haWwuY29tIiwiZXhwIjoxNjI2OTczMDY0LCJpYXQiOjE2MjY4ODY2NjQsImp0aSI6IjE2MjY4ODY2NjQ1ODQyNjMwMDAifQ.-TevVEEZh2kFIf-txXJpYMHgMtdIaaK3UxHKredYTWY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"item_id\": 11,\n    \"quantity\": 3\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/buy",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"buy"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Receipt Status",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbkBhZG1pbi5hZG1pbiIsImV4cCI6MTYyNjk1MzA5MywiaWF0IjoxNjI2ODY2NjkzLCJqdGkiOiIxNjI2ODY2NjkzMzgwNjAxMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.vxB9ff4WzmZhzXr6DDc2nwaLmpQ818BjLQOLENoAt00",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"receipt_id\": 1,\n    \"status\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/receipts/update",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"receipts",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User receipts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXJAZ21haWwuY29tIiwiZXhwIjoxNjI2OTczMDY0LCJpYXQiOjE2MjY4ODY2NjQsImp0aSI6IjE2MjY4ODY2NjQ1ODQyNjMwMDAifQ.-TevVEEZh2kFIf-txXJpYMHgMtdIaaK3UxHKredYTWY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/receipts",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"receipts"
 					]
 				}
 			},
