@@ -11,6 +11,7 @@ type User struct {
 	BillingAddress string    `json:"billing_address"`
 	Balance        float64   `json:"balance"`
 	Receipts       []Receipt `json:"-"`
+	IsAdmin        bool      `json:"is_admin"`
 }
 
 // UserRepo defins allowed operations on User.

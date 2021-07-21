@@ -33,9 +33,6 @@ func main(cfg config.Config) {
 	userRepo := model.SQLUserRepo{
 		DB: db,
 	}
-	adminRepo := model.SQLAdminRepo{
-		DB: db,
-	}
 	categoryRepo := model.SQLCategoryRepo{
 		DB: db,
 	}
@@ -46,7 +43,7 @@ func main(cfg config.Config) {
 
 	jwtConfig := auth.MiddlewareConfig(cfg.Server)
 
-	userHandler := handler.NewUserHandler(userRepo, adminRepo, blacklistRepo, cfg.Server.Secret)
+	userHandler := handler.NewUserHandler(userRepo, blacklistRepo, cfg.Server.Secret)
 	categoryHandler := handler.CategoryHandler{CategoryRepo: categoryRepo}
 
 	// unrestricted endpoints
