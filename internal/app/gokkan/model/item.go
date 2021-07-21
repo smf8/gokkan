@@ -87,7 +87,7 @@ func WithDescendingOrder() ItemOption {
 	}
 }
 
-// WithCreatedSince filters items based on their created_at field
+// WithCreatedSince filters items based on their created_at field.
 func WithCreatedSince(since *time.Time) ItemOption {
 	return func(option *findOption) {
 		option.createdSince = since

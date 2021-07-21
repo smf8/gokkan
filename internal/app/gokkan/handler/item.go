@@ -18,7 +18,7 @@ type ItemHandler struct {
 	ItemRepo model.ItemRepo
 }
 
-// Create handles creating a new item inside database
+// Create handles creating a new item inside database.
 func (i ItemHandler) Create(c echo.Context) error {
 	claims, err := auth.ExtractClaims(c)
 	if err != nil {
@@ -58,6 +58,7 @@ func (i ItemHandler) Create(c echo.Context) error {
 	return c.JSON(http.StatusOK, item)
 }
 
+//nolint:cyclop
 // Find handles finding a list of item with given filters.
 func (i ItemHandler) Find(c echo.Context) error {
 	filters := &request.ItemFilter{}
