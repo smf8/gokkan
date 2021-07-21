@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"github.com/labstack/echo/v4"
 	"sync"
 	"time"
 
@@ -36,6 +37,8 @@ var (
 	ErrInvalidClaimsType = errors.New("invalid claims type")
 	// ErrBlockedToken indicates that token with given JTI is blocked.
 	ErrBlockedToken = errors.New("jwt token is blocked")
+	// ErrTokenNotFound indicates there was no token found.
+	ErrTokenNotFound = errors.New("token not found")
 )
 
 //nolint:gochecknoglobals
@@ -119,8 +122,13 @@ func MiddlewareConfig(cfg config.Server) middleware.JWTConfig {
 	return config
 }
 
-// ExtractClaims extracts GokkanClaims from given jwt token.
-func ExtractClaims(token *jwt.Token) (*GokkanClaims, error) {
+// ExtractClaims extracts GokkanClaims from given context.
+func ExtractClaims(c echo.Context) (*GokkanClaims, error) {
+	token, ok := c.Get(ContextKey).(*jwt.Token)
+	if !ok {
+		return nil, fmt.Errorf("failed to extract cliams: %w", ErrTokenNotFound)
+	}
+
 	claims, ok := token.Claims.(*GokkanClaims)
 
 	if !ok {

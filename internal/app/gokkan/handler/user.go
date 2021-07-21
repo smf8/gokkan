@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 	"github.com/smf8/gokkan/internal/app/gokkan/auth"
@@ -33,16 +32,11 @@ func NewUserHandler(userRepo model.UserRepo,
 
 // GetInfo handles user info retrieval.
 func (u UserHandler) GetInfo(c echo.Context) error {
-	token, ok := c.Get(auth.ContextKey).(*jwt.Token)
-	if !ok {
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to parse jwt token")
-	}
-
-	claims, err := auth.ExtractClaims(token)
+	claims, err := auth.ExtractClaims(c)
 	if err != nil {
 		logrus.Errorf("charge balance: failed to extract claims: %s", err)
 
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract claims")
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
 	}
 
 	user, err := u.UserRepo.Find(claims.Sub)
@@ -85,16 +79,11 @@ func (u UserHandler) ChargeBalance(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bad login request: %s", err.Error()))
 	}
 
-	token, ok := c.Get(auth.ContextKey).(*jwt.Token)
-	if !ok {
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to parse jwt token")
-	}
-
-	claims, err := auth.ExtractClaims(token)
+	claims, err := auth.ExtractClaims(c)
 	if err != nil {
 		logrus.Errorf("charge balance: failed to extract claims: %s", err)
 
-		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract claims")
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
 	}
 
 	user, err := u.UserRepo.Find(claims.Sub)
