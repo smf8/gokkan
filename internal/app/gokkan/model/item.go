@@ -33,6 +33,7 @@ type findOption struct {
 
 // ItemRepo defines allowed operations on an item in database.
 type ItemRepo interface {
+	FindWithID(id int) (*Item, error)
 	Find(options ...ItemOption) ([]Item, error)
 	Save(item *Item) error
 }
@@ -179,4 +180,18 @@ func (i SQLItemRepo) Find(options ...ItemOption) ([]Item, error) {
 	}
 
 	return result, nil
+}
+
+// FindWithID retrieves a single item from database.
+func (i SQLItemRepo) FindWithID(id int) (*Item, error) {
+	var result Item
+	if err := i.DB.Joins("Category").Find(&result).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrRecordNotFound
+		}
+
+		return nil, err
+	}
+
+	return &result, nil
 }
