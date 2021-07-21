@@ -10,7 +10,7 @@ type Category struct {
 
 // CategoryRepo defines allowed operations on Category.
 type CategoryRepo interface {
-	Delete(name string) error
+	Delete(id int) error
 	Save(category *Category) error
 	FindAll() ([]Category, error)
 }
@@ -23,9 +23,9 @@ type SQLCategoryRepo struct {
 	DB *gorm.DB
 }
 
-// Delete removes a category with given name.
-func (c SQLCategoryRepo) Delete(name string) error {
-	return c.DB.Where("name = ?", name).Delete(&Category{}).Error
+// Delete removes a category with given ID.
+func (c SQLCategoryRepo) Delete(id int) error {
+	return c.DB.Where("id = ?", id).Delete(&Category{}).Error
 }
 
 // Save saves given category. if it contains an ID it's updated.
