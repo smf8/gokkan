@@ -67,6 +67,7 @@ func main(cfg config.Config) {
 	userArea.PUT("/charge", userHandler.ChargeBalance)
 	userArea.GET("/me", userHandler.GetInfo)
 	userArea.POST("/logout", userHandler.Logout)
+	userArea.PUT("/update", userHandler.Update)
 
 	// admin area routing
 	adminArea.POST("/categories/create", categoryHandler.Create)

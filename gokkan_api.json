@@ -28,7 +28,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"admin@admin.admin\",\n    \"password\": \"the_powerful_admin\",\n    \"is_admin\": true\n}",
+					"raw": "{\n    \"username\": \"test_user@gmail.com\",\n    \"password\": \"new_pass\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -252,7 +252,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"test_user2@gmail.com\",\n    \"password\": \"123456789a\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
+					"raw": "{\n    \"username\": \"test_user@gmail.com\",\n    \"password\": \"123456789a\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -278,7 +278,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"secret\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
+							"raw": "{\n    \"username\": \"test_user2\",\n    \"password\": \"secret\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -551,7 +551,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/items?max_price=1500&min_price=50&sort_by_price&sort_desc&category_id=2&created_since=1626873329",
+					"raw": "localhost:8080/items?max_price=1500&min_price=50&sort_by_price&sort_desc&category_id=2",
 					"host": [
 						"localhost"
 					],
@@ -579,10 +579,6 @@
 						{
 							"key": "category_id",
 							"value": "2"
-						},
-						{
-							"key": "created_since",
-							"value": "1626873329"
 						}
 					]
 				}
@@ -623,6 +619,44 @@
 						"admin",
 						"items",
 						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXJAZ21haWwuY29tIiwiZXhwIjoxNjI2OTY2NjI0LCJpYXQiOjE2MjY4ODAyMjQsImp0aSI6IjE2MjY4ODAyMjQ0NjY2MDQwMDAifQ.n-mucaraZeWQpfu89GbRHBQZSUo3Fod1TgC4kH4gWQY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"new_pass\",\n    \"full_name\": \"new_user\",\n    \"billing_address\": \"در ره منزل دوست\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/update",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"update"
 					]
 				}
 			},

@@ -41,7 +41,7 @@ func (u UserHandler) GetInfo(c echo.Context) error {
 
 	user, err := u.UserRepo.Find(claims.Sub)
 	if err != nil {
-		logrus.Errorf("charge balance: failed to find user %s: %s", claims.Sub, err.Error())
+		logrus.Errorf("get info: failed to find user %s: %s", claims.Sub, err.Error())
 
 		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
@@ -207,4 +207,53 @@ func (u UserHandler) Logout(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusOK)
+}
+
+// Update updates user info.
+func (u UserHandler) Update(c echo.Context) error {
+	claims, err := auth.ExtractClaims(c)
+	if err != nil {
+		logrus.Errorf("update info: failed to extract claims: %s", err)
+
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
+	}
+
+	user, err := u.UserRepo.Find(claims.Sub)
+	if err != nil {
+		logrus.Errorf("update info: failed to find user %s: %s", claims.Sub, err.Error())
+
+		return echo.NewHTTPError(http.StatusUnauthorized)
+	}
+
+	req := &request.UpdateUser{}
+
+	if err = c.Bind(req); err != nil {
+		logrus.Errorf("update info: failed to bind update info request: %s", err.Error())
+
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bind request failed: %s", err))
+	}
+
+	if err = c.Validate(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("bad get info request: %s", err.Error()))
+	}
+
+	if req.Password != "" {
+		user.Password = auth.Hash(req.Password)
+	}
+
+	if req.FullName != "" {
+		user.FullName = req.FullName
+	}
+
+	if req.BillingAddress != "" {
+		user.BillingAddress = req.BillingAddress
+	}
+
+	if err = u.UserRepo.Save(user); err != nil {
+		logrus.Errorf("failed to update user %+v: %s", req, err.Error())
+
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to update user")
+	}
+
+	return c.JSON(http.StatusOK, user)
 }

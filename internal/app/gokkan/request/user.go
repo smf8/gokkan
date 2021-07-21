@@ -18,3 +18,10 @@ type Signup struct {
 type ChargeBalance struct {
 	Amount float64 `json:"amount" validate:"required,gt=0"`
 }
+
+// UpdateUser represents an update user request
+type UpdateUser struct {
+	Password       string `json:"password" validation:"email,max=255"`
+	FullName       string `json:"full_name" validation:"max=255"`
+	BillingAddress string `json:"billing_address" validation:"max=1000"`
+}
