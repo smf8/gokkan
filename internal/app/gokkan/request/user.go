@@ -4,7 +4,6 @@ package request
 type Login struct {
 	Username string `json:"username" validate:"required,email,max=255"`
 	Password string `json:"password" validate:"required,min=8,max=255"`
-	IsAdmin  bool   `json:"is_admin"`
 }
 
 // Signup represents user signup request body.
