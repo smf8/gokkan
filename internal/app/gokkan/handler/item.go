@@ -18,7 +18,7 @@ type ItemHandler struct {
 	ItemRepo model.ItemRepo
 }
 
-// Create handles creating a new item inside database.
+// Create handles creating/updating an item inside database.
 func (i ItemHandler) Create(c echo.Context) error {
 	claims, err := auth.ExtractClaims(c)
 	if err != nil {
@@ -46,9 +46,11 @@ func (i ItemHandler) Create(c echo.Context) error {
 	}
 
 	item := &model.Item{
+		ID:         req.ID,
 		Name:       req.Name,
 		CategoryID: req.CategoryID,
 		Price:      req.Price,
+		Remaining:  req.Remaining,
 	}
 
 	if err := i.ItemRepo.Save(item); err != nil {

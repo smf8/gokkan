@@ -2,9 +2,11 @@ package request
 
 // CreateItem represents a product create/update request.
 type CreateItem struct {
+	ID         int     `json:"id"`
 	Name       string  `json:"name" validate:"required"`
 	CategoryID int     `json:"category_id" validate:"required,gt=0"`
 	Price      float64 `json:"price" validate:"required,gt=0"`
+	Remaining  int     `json:"remaining"`
 }
 
 // ItemFilter represents a find item filter request.
