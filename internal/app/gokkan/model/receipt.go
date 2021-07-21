@@ -1,6 +1,7 @@
 package model
 
 import (
+	"errors"
 	"time"
 
 	"gorm.io/gorm"
@@ -38,6 +39,7 @@ type ReceiptRepo interface {
 	Save(receipt *Receipt) error
 	UpdateStatus(receiptID int, status ReceiptStatus) error
 	FindForUser(userID int) ([]Receipt, error)
+	FindAll() ([]Receipt, error)
 }
 
 var _ ReceiptRepo = SQLReceiptRepo{}
@@ -70,7 +72,35 @@ func (r SQLReceiptRepo) FindForUser(userID int) ([]Receipt, error) {
 
 	err := r.DB.Joins("Item").Where("user_id = ?", userID).Find(&result).Error
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrRecordNotFound
+		}
+
 		return nil, err
+	}
+
+	if len(result) == 0 {
+		return nil, ErrRecordNotFound
+	}
+
+	return result, nil
+}
+
+// FindAll retrieves all receipts from Database.
+func (r SQLReceiptRepo) FindAll() ([]Receipt, error) {
+	var result []Receipt
+
+	err := r.DB.Joins("Item").Find(&result).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, ErrRecordNotFound
+		}
+
+		return nil, err
+	}
+
+	if len(result) == 0 {
+		return nil, ErrRecordNotFound
 	}
 
 	return result, nil

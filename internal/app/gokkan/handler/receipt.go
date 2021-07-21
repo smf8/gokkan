@@ -20,8 +20,8 @@ type BuyHandler struct {
 	UserRepo    model.UserRepo
 }
 
-//nolint:funlen
 // Buy handles buying an item and generating a receipt.
+//nolint:funlen
 func (b BuyHandler) Buy(c echo.Context) error {
 	claims, err := auth.ExtractClaims(c)
 	if err != nil {
@@ -148,6 +148,10 @@ func (b BuyHandler) GetReceipts(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
 	}
 
+	if !claims.Privieged {
+		return echo.NewHTTPError(http.StatusUnauthorized, "only admin can use this endpoint")
+	}
+
 	user, err := b.UserRepo.Find(claims.Sub)
 	if err != nil {
 		logrus.Errorf("get receipts: failed to find user %s: %s", claims.Sub, err.Error())
@@ -155,9 +159,22 @@ func (b BuyHandler) GetReceipts(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized)
 	}
 
-	receipts, err := b.ReceiptRepo.FindForUser(user.ID)
+	var receipts []model.Receipt
+
+	if claims.Privieged {
+		receipts, err = b.ReceiptRepo.FindAll()
+	} else {
+		receipts, err = b.ReceiptRepo.FindForUser(user.ID)
+	}
+
 	if err != nil {
+		if errors.Is(err, model.ErrRecordNotFound) {
+			return echo.NewHTTPError(http.StatusNotFound, "no record found")
+		}
+
 		logrus.Errorf("failed to find receipts for user %+v: %s", user, err)
+
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to get receipts")
 	}
 
 	return c.JSON(http.StatusOK, receipts)
