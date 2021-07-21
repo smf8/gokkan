@@ -170,7 +170,7 @@ func (i SQLItemRepo) Find(options ...ItemOption) ([]Item, error) {
 
 	var result []Item
 
-	if err := queryTx.Find(&result).Error; err != nil {
+	if err := queryTx.Joins("Category").Find(&result).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrRecordNotFound
 		}
