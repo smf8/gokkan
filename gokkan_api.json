@@ -421,6 +421,94 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Create category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTYyNjk0MjI1MiwiaWF0IjoxNjI2ODU1ODUyLCJqdGkiOiIxNjI2ODU1ODUyODM0MzgwMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.GHzwy8BmE6wR-xZuSzxnx424hJPrpPzAUA6E0ITBAUA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"sports\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/categories/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"categories",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Category",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbiIsImV4cCI6MTYyNjk0MjI1MiwiaWF0IjoxNjI2ODU1ODUyLCJqdGkiOiIxNjI2ODU1ODUyODM0MzgwMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.GHzwy8BmE6wR-xZuSzxnx424hJPrpPzAUA6E0ITBAUA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/admin/categories/delete/8",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"categories",
+						"delete",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all Categories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/categories",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

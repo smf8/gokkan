@@ -3,11 +3,11 @@ package auth
 import (
 	"errors"
 	"fmt"
-	"github.com/labstack/echo/v4"
 	"sync"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"github.com/smf8/gokkan/internal/app/gokkan/config"

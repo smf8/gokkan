@@ -21,6 +21,7 @@ import (
 
 const shutdownTimeout = 5 * time.Second
 
+// nolint:funlen
 func main(cfg config.Config) {
 	echo := router.Echo()
 
@@ -32,8 +33,10 @@ func main(cfg config.Config) {
 	userRepo := model.SQLUserRepo{
 		DB: db,
 	}
-
 	adminRepo := model.SQLAdminRepo{
+		DB: db,
+	}
+	categoryRepo := model.SQLCategoryRepo{
 		DB: db,
 	}
 
@@ -44,15 +47,27 @@ func main(cfg config.Config) {
 	jwtConfig := auth.MiddlewareConfig(cfg.Server)
 
 	userHandler := handler.NewUserHandler(userRepo, adminRepo, cfg.Server.Secret)
+	categoryHandler := handler.CategoryHandler{CategoryRepo: categoryRepo}
 
+	// unrestricted endpoints
 	echo.POST("/login", userHandler.Login)
 	echo.POST("/signup", userHandler.Signup)
+	echo.GET("/categories", categoryHandler.GetAll)
 
+	// restricted endpoints. requires authorization
 	userArea := echo.Group("/users")
+	adminArea := echo.Group("/admin")
 
 	userArea.Use(middleware.JWTWithConfig(jwtConfig))
+	adminArea.Use(middleware.JWTWithConfig(jwtConfig))
+
+	// user area routing
 	userArea.PUT("/charge", userHandler.ChargeBalance)
 	userArea.GET("/me", userHandler.GetInfo)
+
+	// admin area routing
+	adminArea.POST("/categories/create", categoryHandler.Create)
+	adminArea.DELETE("/categories/delete/:id", categoryHandler.Delete)
 
 	go func() {
 		err := echo.Start(fmt.Sprintf(":%d", cfg.Server.Port))
