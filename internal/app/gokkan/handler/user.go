@@ -15,18 +15,21 @@ import (
 
 // UserHandler handles user and admin related endpoints.
 type UserHandler struct {
-	UserRepo  model.UserRepo
-	AdminRepo model.AdminRepo
-	jwtSecret string
+	UserRepo      model.UserRepo
+	AdminRepo     model.AdminRepo
+	BlacklistRepo model.TokenBlacklistRepo
+	jwtSecret     string
 }
 
 // NewUserHandler creates a new user handler.
 func NewUserHandler(userRepo model.UserRepo,
-	adminRepo model.AdminRepo, jwtSecret string) UserHandler {
+	adminRepo model.AdminRepo,
+	tokenRepo model.TokenBlacklistRepo, jwtSecret string) UserHandler {
 	return UserHandler{
-		UserRepo:  userRepo,
-		AdminRepo: adminRepo,
-		jwtSecret: jwtSecret,
+		UserRepo:      userRepo,
+		AdminRepo:     adminRepo,
+		BlacklistRepo: tokenRepo,
+		jwtSecret:     jwtSecret,
 	}
 }
 
@@ -173,6 +176,24 @@ func (u UserHandler) Login(c echo.Context) error {
 	req.Username = strings.ToLower(req.Username)
 
 	return u.loginUser(c, req)
+}
+
+// Logout handles user logout.
+func (u UserHandler) Logout(c echo.Context) error {
+	claims, err := auth.ExtractClaims(c)
+	if err != nil {
+		logrus.Errorf("logout: failed to extract claims: %s", err)
+
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
+	}
+
+	if err := u.BlacklistRepo.Save(claims.JTI); err != nil {
+		logrus.Errorf("logout: failed to block token: %s", err.Error())
+
+		return echo.NewHTTPError(http.StatusInternalServerError, "failed to block jwt token")
+	}
+
+	return c.NoContent(http.StatusOK)
 }
 
 func (u UserHandler) loginUser(c echo.Context, req *request.Login) error {

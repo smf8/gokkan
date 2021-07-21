@@ -262,7 +262,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test_user1\",\n    \"password\": \"secret\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
+							"raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"secret\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -505,6 +505,35 @@
 					"port": "8080",
 					"path": [
 						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXIiLCJleHAiOjE2MjY5NDc3ODQsImlhdCI6MTYyNjg2MTM4NCwianRpIjoiMTYyNjg2MTM4NDM0NjMzMjAwMCJ9.lBFW12TeaP7nN9uXUFfY6YfUwSRVUdmGsWs83AjRPJY",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"logout"
 					]
 				}
 			},

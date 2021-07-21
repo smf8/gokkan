@@ -46,7 +46,7 @@ func main(cfg config.Config) {
 
 	jwtConfig := auth.MiddlewareConfig(cfg.Server)
 
-	userHandler := handler.NewUserHandler(userRepo, adminRepo, cfg.Server.Secret)
+	userHandler := handler.NewUserHandler(userRepo, adminRepo, blacklistRepo, cfg.Server.Secret)
 	categoryHandler := handler.CategoryHandler{CategoryRepo: categoryRepo}
 
 	// unrestricted endpoints
@@ -64,6 +64,7 @@ func main(cfg config.Config) {
 	// user area routing
 	userArea.PUT("/charge", userHandler.ChargeBalance)
 	userArea.GET("/me", userHandler.GetInfo)
+	userArea.POST("/logout", userHandler.Logout)
 
 	// admin area routing
 	adminArea.POST("/categories/create", categoryHandler.Create)

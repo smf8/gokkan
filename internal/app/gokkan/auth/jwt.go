@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
@@ -110,7 +111,7 @@ func MiddlewareConfig(cfg config.Server) middleware.JWTConfig {
 	errHandler := func(err error) error {
 		logrus.Errorf("jwt middleware failed: %s", err.Error())
 
-		return err
+		return echo.NewHTTPError(http.StatusUnauthorized, err.Error())
 	}
 
 	config := middleware.JWTConfig{
