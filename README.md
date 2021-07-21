@@ -1,3 +1,4 @@
+![Build Status](https://github.com/smf8/gokkan/actions/workflows/main.yml/badge.svg)
 # Gokkan
 Gokkan is an online shop backend service written in Go.
 
