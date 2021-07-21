@@ -7,14 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// ErrItemNotFound the purpose of this variable is pretty obvious.
-var ErrItemNotFound = errors.New("item not found")
-
 // Item represents an item in our website, it has a `belong-to` relation with model.Category.
 type Item struct {
 	ID         int       `json:"id"`
 	Name       string    `json:"name"`
-	CategoryID int       `json:"category_id"`
+	CategoryID int       `json:"-"`
 	Category   Category  `json:"category"`
 	Price      float64   `json:"price"`
 	Remaining  int       `json:"remaining"`
@@ -31,6 +28,7 @@ type findOption struct {
 	descendingOrder bool
 	orderPrice      bool
 	orderDate       bool
+	createdSince    *time.Time
 }
 
 // ItemRepo defines allowed operations on an item in database.
@@ -54,10 +52,16 @@ type ItemOption func(option *findOption)
 // we use something like functional options
 // for providing dynamic selection cases
 
-// WithPriceRange sets price minimum and maximum in select statement.
-func WithPriceRange(minPrice, maxPrice float64) ItemOption {
+// WithPriceMin sets price minimum in select statement.
+func WithPriceMin(minPrice float64) ItemOption {
 	return func(option *findOption) {
 		option.minPrice = minPrice
+	}
+}
+
+// WithPriceMax sets price maximum in select statement.
+func WithPriceMax(maxPrice float64) ItemOption {
+	return func(option *findOption) {
 		option.maxPrice = maxPrice
 	}
 }
@@ -83,6 +87,13 @@ func WithDescendingOrder() ItemOption {
 	}
 }
 
+// WithCreatedSince filters items based on their created_at field
+func WithCreatedSince(since *time.Time) ItemOption {
+	return func(option *findOption) {
+		option.createdSince = since
+	}
+}
+
 // WithPriceOrder sets order by price.
 func WithPriceOrder() ItemOption {
 	return func(option *findOption) {
@@ -103,7 +114,15 @@ func WithDateOrder() ItemOption {
 //nolint:nestif
 func (o findOption) toSQL(tx *gorm.DB) *gorm.DB {
 	if o.maxPrice != 0 {
-		tx = tx.Where("price < ? and price > ?", o.maxPrice, o.minPrice)
+		tx = tx.Where("price < ?", o.maxPrice)
+	}
+
+	if o.minPrice != 0 {
+		tx = tx.Where("price > ?", o.minPrice)
+	}
+
+	if o.createdSince != nil {
+		tx = tx.Where("created_at > ?", o.createdSince)
 	}
 
 	if o.orderPrice {
@@ -116,7 +135,7 @@ func (o findOption) toSQL(tx *gorm.DB) *gorm.DB {
 		if o.descendingOrder {
 			tx = tx.Order("created_at desc")
 		} else {
-			tx = tx.Or("created_at")
+			tx = tx.Order("created_at")
 		}
 	}
 
@@ -153,7 +172,7 @@ func (i SQLItemRepo) Find(options ...ItemOption) ([]Item, error) {
 
 	if err := queryTx.Find(&result).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, ErrItemNotFound
+			return nil, ErrRecordNotFound
 		}
 
 		return nil, err
