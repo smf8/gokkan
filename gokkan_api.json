@@ -1,18 +1,34 @@
 {
 	"info": {
-		"_postman_id": "a3a30ab7-f315-4dc6-943c-5614de69e91e",
+		"_postman_id": "e713789d-e270-4c08-9cd5-930c6cbfad96",
 		"name": "Gokkan",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code == 200) {",
+							"    pm.environment.set(\"authToken\", pm.response.json().token)",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"admin\",\n    \"password\": \"admin\",\n    \"is_admin\": true\n}",
+					"raw": "{\n    \"username\": \"admin@admin.admin\",\n    \"password\": \"the_powerful_admin\",\n    \"is_admin\": true\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -31,55 +47,6 @@
 				}
 			},
 			"response": [
-				{
-					"name": "admin successful",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"username\": \"admin@admin.admin\",\n    \"password\": \"the_powerful_admin\",\n    \"is_admin\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/login",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"login"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=UTF-8"
-						},
-						{
-							"key": "Vary",
-							"value": "Origin"
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 20 Jul 2021 20:51:31 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "286"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"id\": 0,\n    \"username\": \"admin@admin.admin\",\n    \"is_admin\": true,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbkBhZG1pbi5hZG1pbiIsImV4cCI6MTYyNjk1MzA5MywiaWF0IjoxNjI2ODY2NjkzLCJqdGkiOiIxNjI2ODY2NjkzMzgwNjAxMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.vxB9ff4WzmZhzXr6DDc2nwaLmpQ818BjLQOLENoAt00\"\n}"
-				},
 				{
 					"name": "admin fail",
 					"originalRequest": {
@@ -130,13 +97,62 @@
 					"body": "{\n    \"message\": \"Unauthorized\"\n}"
 				},
 				{
+					"name": "admin successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin@admin.admin\",\n    \"password\": \"the_powerful_admin\",\n    \"is_admin\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 20 Jul 2021 20:51:31 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "286"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": 0,\n    \"username\": \"admin@admin.admin\",\n    \"is_admin\": true,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbkBhZG1pbi5hZG1pbiIsImV4cCI6MTYyNjk1MzA5MywiaWF0IjoxNjI2ODY2NjkzLCJqdGkiOiIxNjI2ODY2NjkzMzgwNjAxMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.vxB9ff4WzmZhzXr6DDc2nwaLmpQ818BjLQOLENoAt00\"\n}"
+				},
+				{
 					"name": "user successful",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test_user\",\n    \"password\": \"secret\",\n    \"is_admin\": false\n}",
+							"raw": "{\n    \"username\": \"test_user2@gmail.com\",\n    \"password\": \"123456789a\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -236,7 +252,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\": \"test_user3@gmail.com\",\n    \"password\": \"123456789\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
+					"raw": "{\n    \"username\": \"test_user2@gmail.com\",\n    \"password\": \"123456789a\",\n    \"full_name\": \"test user\",\n    \"billing_address\": \"test st. no 25\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -396,16 +412,6 @@
 		{
 			"name": "Get User info",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXIxIiwiZXhwIjoxNjI2OTM0NzQ4LCJpYXQiOjE2MjY4NDgzNDgsImp0aSI6IjE2MjY4NDgzNDgwMTc2NzEwMDAifQ.YQgRZUEUAkdlA_6mzWbkXaZe50mvtkVN2C9--xdmBbI",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -545,7 +551,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "",
+				"value": "{{authToken}}",
 				"type": "string"
 			}
 		]
