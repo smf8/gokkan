@@ -8,7 +8,7 @@ import (
 )
 
 // Validator is the default request struct validator
-// see github.com/go-playground/validator for validation tags.
+// see github.com/go-playground/validator for validate tags.
 type Validator struct {
 	v *validator.Validate
 }

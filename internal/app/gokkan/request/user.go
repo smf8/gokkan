@@ -21,7 +21,7 @@ type ChargeBalance struct {
 
 // UpdateUser represents an update user request
 type UpdateUser struct {
-	Password       string `json:"password" validation:"email,max=255"`
-	FullName       string `json:"full_name" validation:"max=255"`
-	BillingAddress string `json:"billing_address" validation:"max=1000"`
+	Password       string `json:"password" validate:"email,max=255"`
+	FullName       string `json:"full_name" validate:"max=255"`
+	BillingAddress string `json:"billing_address" validate:"max=1000"`
 }
