@@ -2,17 +2,17 @@ package request
 
 // Login represents Login request body.
 type Login struct {
-	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Username string `json:"username" validate:"required,email,max=255"`
+	Password string `json:"password" validate:"required,min=8,max=255"`
 	IsAdmin  bool   `json:"is_admin"`
 }
 
 // Signup represents user signup request body.
 type Signup struct {
-	Username       string `json:"username" validate:"required"`
-	Password       string `json:"password" validate:"required"`
-	FullName       string `json:"full_name"`
-	BillingAddress string `json:"billing_address"`
+	Username       string `json:"username" validate:"required,email,max=255"`
+	Password       string `json:"password" validate:"required,min=8,max=255"`
+	FullName       string `json:"full_name" validate:"max=255"`
+	BillingAddress string `json:"billing_address" validate:"max=1000"`
 }
 
 // ChargeBalance represents balance increase request.
