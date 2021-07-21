@@ -13,6 +13,7 @@ var ErrItemNotFound = errors.New("item not found")
 // Item represents an item in our website, it has a `belong-to` relation with model.Category.
 type Item struct {
 	ID         int       `json:"id"`
+	Name       string    `json:"name"`
 	CategoryID int       `json:"category_id"`
 	Category   Category  `json:"category"`
 	Price      float64   `json:"price"`

@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS items(
-                                    id BIGSERIAL PRIMARY KEY,
-                                    category_id BIGINT DEFAULT 1,
-                                    price FLOAT(8) NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    category_id BIGINT DEFAULT 1,
+    name VARCHAR(255) NOT NULL,
+    price FLOAT(8) NOT NULL,
     remaining INTEGER NOT NULL,
     sold INTEGER DEFAULT 0,
     photo_url varchar(255),
