@@ -14,3 +14,8 @@ type Signup struct {
 	FullName       string `json:"full_name"`
 	BillingAddress string `json:"billing_address"`
 }
+
+// ChargeBalance represents balance increase request.
+type ChargeBalance struct {
+	Amount float64 `json:"amount" validate:"required,gt=0"`
+}

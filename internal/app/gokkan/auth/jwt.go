@@ -8,15 +8,22 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/sirupsen/logrus"
 	"github.com/smf8/gokkan/internal/app/gokkan/config"
 	"github.com/smf8/gokkan/internal/app/gokkan/model"
 )
 
-// Issuer is jwt issuer for token generation.
-const Issuer = "gokkan.io"
+const (
+	// Issuer is jwt issuer for token generation.
+	Issuer = "gokkan.io"
 
-// DefaultExpiration specifies JWT token expiration period.
-const DefaultExpiration = 24 * time.Hour
+	// DefaultExpiration specifies JWT token expiration period.
+	DefaultExpiration = 24 * time.Hour
+
+	// ContextKey defines the key by which token is stored in echo context.
+	// it's defined by default by echo. we can change it in JWTConfig.
+	ContextKey = "user"
+)
 
 var (
 	// ErrInvalidIssuer occurs with invalid ISS field.
@@ -97,16 +104,23 @@ func SetTokenBlacklistRepo(repo model.TokenBlacklistRepo) {
 // MiddlewareConfig returns echo's default jwt middleware config
 // with custom signing key and claims struct.
 func MiddlewareConfig(cfg config.Server) middleware.JWTConfig {
+	errHandler := func(err error) error {
+		logrus.Errorf("jwt middleware failed: %s", err.Error())
+
+		return err
+	}
+
 	config := middleware.JWTConfig{
-		SigningKey: cfg.Secret,
-		Claims:     &GokkanClaims{},
+		SigningKey:   []byte(cfg.Secret),
+		Claims:       &GokkanClaims{},
+		ErrorHandler: errHandler,
 	}
 
 	return config
 }
 
 // ExtractClaims extracts GokkanClaims from given jwt token.
-func ExtractClaims(token jwt.Token) (*GokkanClaims, error) {
+func ExtractClaims(token *jwt.Token) (*GokkanClaims, error) {
 	claims, ok := token.Claims.(*GokkanClaims)
 
 	if !ok {

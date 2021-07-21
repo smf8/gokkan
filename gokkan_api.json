@@ -354,6 +354,73 @@
 					"body": "{\n    \"id\": 2,\n    \"username\": \"only_username\",\n    \"is_admin\": false,\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJvbmx5X3VzZXJuYW1lIiwiZXhwIjoxNjI2OTAyNDgyLCJpYXQiOjE2MjY4MTYwODIsImp0aSI6IjE2MjY4MTYwODIwMTI2NzQwMDAifQ.Ba6AnXe7aufVphK6xytNcoIcGqEjmmcisW_KfHv3dh0\"\n}"
 				}
 			]
+		},
+		{
+			"name": "Charge balance",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXIxIiwiZXhwIjoxNjI2OTM0NzQ4LCJpYXQiOjE2MjY4NDgzNDgsImp0aSI6IjE2MjY4NDgzNDgwMTc2NzEwMDAifQ.YQgRZUEUAkdlA_6mzWbkXaZe50mvtkVN2C9--xdmBbI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 1.5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/users/charge",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"charge"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User info",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJ0ZXN0X3VzZXIxIiwiZXhwIjoxNjI2OTM0NzQ4LCJpYXQiOjE2MjY4NDgzNDgsImp0aSI6IjE2MjY4NDgzNDgwMTc2NzEwMDAifQ.YQgRZUEUAkdlA_6mzWbkXaZe50mvtkVN2C9--xdmBbI",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/users/me",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

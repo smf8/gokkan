@@ -8,7 +8,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
+	"github.com/smf8/gokkan/internal/app/gokkan/auth"
 	"github.com/smf8/gokkan/internal/app/gokkan/config"
 	"github.com/smf8/gokkan/internal/app/gokkan/database"
 	"github.com/smf8/gokkan/internal/app/gokkan/handler"
@@ -35,10 +37,22 @@ func main(cfg config.Config) {
 		DB: db,
 	}
 
+	blacklistRepo := model.NewCacheTokenBlacklistRepo(auth.DefaultExpiration)
+
+	auth.SetTokenBlacklistRepo(blacklistRepo)
+
+	jwtConfig := auth.MiddlewareConfig(cfg.Server)
+
 	userHandler := handler.NewUserHandler(userRepo, adminRepo, cfg.Server.Secret)
 
 	echo.POST("/login", userHandler.Login)
 	echo.POST("/signup", userHandler.Signup)
+
+	userArea := echo.Group("/users")
+
+	userArea.Use(middleware.JWTWithConfig(jwtConfig))
+	userArea.PUT("/charge", userHandler.ChargeBalance)
+	userArea.GET("/me", userHandler.GetInfo)
 
 	go func() {
 		err := echo.Start(fmt.Sprintf(":%d", cfg.Server.Port))
