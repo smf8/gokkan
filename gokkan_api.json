@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "e713789d-e270-4c08-9cd5-930c6cbfad96",
-		"name": "Gokkan",
+		"_postman_id": "0dba28f4-8edc-49ae-abde-833da135c92c",
+		"name": "Gokkan Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -540,6 +540,89 @@
 					"path": [
 						"users",
 						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find Items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/items?max_price=1500&min_price=50&sort_by_price&sort_desc&category_id=2&created_since=1626873329",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"items"
+					],
+					"query": [
+						{
+							"key": "max_price",
+							"value": "1500"
+						},
+						{
+							"key": "min_price",
+							"value": "50"
+						},
+						{
+							"key": "sort_by_price",
+							"value": null
+						},
+						{
+							"key": "sort_desc",
+							"value": null
+						},
+						{
+							"key": "category_id",
+							"value": "2"
+						},
+						{
+							"key": "created_since",
+							"value": "1626873329"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnb2trYW4uaW8iLCJzdWIiOiJhZG1pbkBhZG1pbi5hZG1pbiIsImV4cCI6MTYyNjk1MzA5MywiaWF0IjoxNjI2ODY2NjkzLCJqdGkiOiIxNjI2ODY2NjkzMzgwNjAxMDAwIiwicHJpdmllZ2VkIjp0cnVlfQ.vxB9ff4WzmZhzXr6DDc2nwaLmpQ818BjLQOLENoAt00",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"شیر خوردنی\",\n    \"category_id\": 1,\n    \"price\": 1600\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/admin/items/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"items",
+						"create"
 					]
 				}
 			},
