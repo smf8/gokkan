@@ -185,7 +185,7 @@ func (i SQLItemRepo) Find(options ...ItemOption) ([]Item, error) {
 // FindWithID retrieves a single item from database.
 func (i SQLItemRepo) FindWithID(id int) (*Item, error) {
 	var result Item
-	if err := i.DB.Joins("Category").Where("id = ?", id).Find(&result).Error; err != nil {
+	if err := i.DB.Joins("Category").Where("items.id = ?", id).Find(&result).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrRecordNotFound
 		}
