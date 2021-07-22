@@ -148,10 +148,6 @@ func (b BuyHandler) GetReceipts(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to extract jwt claims")
 	}
 
-	if !claims.Privieged {
-		return echo.NewHTTPError(http.StatusUnauthorized, "only admin can use this endpoint")
-	}
-
 	user, err := b.UserRepo.Find(claims.Sub)
 	if err != nil {
 		logrus.Errorf("get receipts: failed to find user %s: %s", claims.Sub, err.Error())
