@@ -30,6 +30,13 @@ services:
     networks:
       - postgres
 
+  pyroscope:
+    image: "pyroscope/pyroscope:latest"
+    ports:
+      - "4040:4040"
+    command:
+      - "server"
+
 networks:
   postgres:
     driver: bridge

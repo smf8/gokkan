@@ -1,6 +1,11 @@
 package config
 
-import "time"
+import (
+	"time"
+
+	"github.com/pyroscope-io/pyroscope/pkg/agent/profiler"
+	"github.com/pyroscope-io/pyroscope/pkg/agent/spy"
+)
 
 // Namespace is the name for application instance.
 const Namespace = "Gokkan"
@@ -23,5 +28,18 @@ var def = Config{
 		Timeout: 5 * time.Second,
 		Secret:  "super_top_classified_secret",
 		Port:    8080,
+	},
+	Pyroscope: Pyroscope{
+		Enable:     true,
+		Server:     "http://localhost:4040",
+		SampleRate: 100,
+		EnableLogs: true,
+		Profiles: []spy.ProfileType{
+			profiler.ProfileCPU,
+			profiler.ProfileAllocObjects,
+			profiler.ProfileAllocSpace,
+			profiler.ProfileInuseObjects,
+			profiler.ProfileInuseSpace,
+		},
 	},
 }

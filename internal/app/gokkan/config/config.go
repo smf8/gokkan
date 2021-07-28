@@ -9,6 +9,7 @@ import (
 	"github.com/knadh/koanf/providers/env"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/providers/structs"
+	"github.com/pyroscope-io/pyroscope/pkg/agent/spy"
 	"github.com/sirupsen/logrus"
 )
 
@@ -17,9 +18,10 @@ const _Prefix = "GOKKAN_"
 type (
 	// Config represents a gokkan config instance.
 	Config struct {
-		Logger   Logger   `koanf:"logger"`
-		Database Database `koanf:"database"`
-		Server   Server   `koanf:"server"`
+		Logger    Logger    `koanf:"logger"`
+		Database  Database  `koanf:"database"`
+		Server    Server    `koanf:"server"`
+		Pyroscope Pyroscope `koanf:"pyroscope"`
 	}
 
 	// Server struct specifies echo server settings.
@@ -43,6 +45,16 @@ type (
 		Username string        `koanf:"username"`
 		Password string        `koanf:"password"`
 		Timeout  time.Duration `koanf:"timeout"`
+	}
+
+	// Pyroscope represents configuations required to run pyroscope agent.
+	Pyroscope struct {
+		Server     string `koanf:"server"`
+		SampleRate uint32 `koanf:"sample-rate"`
+		EnableLogs bool   `koanf:"enable-logs"`
+		Enable     bool   `koanf:"enable"`
+		// possible values: "cpu, inuse_objects, alloc_objects, inuse_space, alloc_space"
+		Profiles []spy.ProfileType `koanf:"profiles"`
 	}
 )
 

@@ -15,6 +15,7 @@ import (
 	"github.com/smf8/gokkan/internal/app/gokkan/database"
 	"github.com/smf8/gokkan/internal/app/gokkan/handler"
 	"github.com/smf8/gokkan/internal/app/gokkan/model"
+	"github.com/smf8/gokkan/internal/app/gokkan/profiling"
 	"github.com/smf8/gokkan/internal/app/gokkan/router"
 	"github.com/spf13/cobra"
 )
@@ -24,6 +25,20 @@ const shutdownTimeout = 5 * time.Second
 // nolint:funlen
 func main(cfg config.Config) {
 	echo := router.Echo()
+
+	if cfg.Pyroscope.Enable {
+		p, err := profiling.Start(cfg.Pyroscope)
+		if err != nil {
+			// we can ignore profiler.
+			logrus.Fatalf("failed to start profiler: %s", err.Error())
+		}
+
+		defer func() {
+			if err = p.Stop(); err != nil {
+				logrus.Errorf("failed to stop pyroscope profiling: %s", err.Error())
+			}
+		}()
+	}
 
 	db, err := database.New(cfg.Database)
 	if err != nil {
